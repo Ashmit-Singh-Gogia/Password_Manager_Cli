@@ -1,0 +1,16 @@
+# build output
+*.o
+*.d
+*.dSYM/
+/pm
+a.out
+compile_commands.json
+*.dSYM
+
+# macOS
+.DS_Store
+
+
+#
+/Docs
+.cache
