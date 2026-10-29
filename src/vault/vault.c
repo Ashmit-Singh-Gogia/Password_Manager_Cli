@@ -68,3 +68,32 @@ Status vault_add(vault *v, const char *service, const char *username,
 
   return STATUS_OK;
 }
+
+
+entry *vault_find(vault *v, const char *service) {
+  if (!v || !service) {
+    return NULL;
+  }
+  for (size_t i = 0; i < v->count; i++) {
+    if (strcmp(v->items[i].service, service) == 0) {
+      return &v->items[i];
+    }
+  }
+  return NULL;
+}
+
+
+Status vault_delete(vault *v, const char *service) {
+  if (!v || !service) {
+    return STATUS_INVALID_INPUT;
+  }
+  for (size_t i = 0; i < v->count; i++) {
+    if (strcmp(v->items[i].service, service) == 0) {
+      // move the last item to the deleted item's position
+      v->items[i] = v->items[v->count - 1];
+      v->count--;
+      return STATUS_OK;
+    }
+  }
+  return STATUS_NOT_FOUND;
+}

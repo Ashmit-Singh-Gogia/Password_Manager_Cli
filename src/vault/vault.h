@@ -22,5 +22,7 @@ typedef struct vault {
 void vault_init(vault *v);
 void vault_free(vault *v);
 Status vault_add(vault *v , const char *service, const char *username, const char *password);
+entry *vault_find(vault *v, const char *service);
+Status vault_delete(vault *v, const char *service);
 
 #endif
