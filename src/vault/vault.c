@@ -26,6 +26,12 @@ Status vault_add(vault *v, const char *service, const char *username,
   if (!v || !service || !username || !password) {
     return STATUS_INVALID_INPUT;
   }
+  // if there are tab or new line characters in the strings
+  if (strchr(service, '\t') || strchr(service, '\n') ||
+      strchr(username, '\t') || strchr(username, '\n') ||
+      strchr(password, '\t') || strchr(password, '\n')) {
+    return STATUS_INVALID_INPUT;
+  }
   // if empty strings are passed, return invalid input
   if (service[0] == '\0' || username[0] == '\0' || password[0] == '\0') {
     return STATUS_INVALID_INPUT;
@@ -69,7 +75,6 @@ Status vault_add(vault *v, const char *service, const char *username,
   return STATUS_OK;
 }
 
-
 entry *vault_find(vault *v, const char *service) {
   if (!v || !service) {
     return NULL;
@@ -81,7 +86,6 @@ entry *vault_find(vault *v, const char *service) {
   }
   return NULL;
 }
-
 
 Status vault_delete(vault *v, const char *service) {
   if (!v || !service) {

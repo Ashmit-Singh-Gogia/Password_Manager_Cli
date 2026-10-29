@@ -1,7 +1,7 @@
 #ifndef VAULT_H
 #define VAULT_H
+#include "../common/status.h"
 #include <stddef.h>
-#include <common/status.h>
 
 #define SERVICE_MAX_LEN 64
 #define USERNAME_MAX_LEN 64
@@ -21,7 +21,8 @@ typedef struct vault {
 
 void vault_init(vault *v);
 void vault_free(vault *v);
-Status vault_add(vault *v , const char *service, const char *username, const char *password);
+Status vault_add(vault *v, const char *service, const char *username,
+                 const char *password);
 entry *vault_find(vault *v, const char *service);
 Status vault_delete(vault *v, const char *service);
 
