@@ -1,0 +1,13 @@
+#ifndef STATUS_H
+#define STATUS_H
+
+typedef enum Status {
+  STATUS_OK,
+  STATUS_INVALID_INPUT,
+  STATUS_DUPLICATE,
+  STATUS_NOT_FOUND,
+  STATUS_TOO_LONG,
+  STATUS_NO_MEMORY,
+} Status;
+
+#endif

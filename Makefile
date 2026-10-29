@@ -1,5 +1,5 @@
 CC     := clang
-CFLAGS := -std=c11 -Wall -Wextra -Wpedantic -Werror -g -Isrc
+CFLAGS := -std=c11 -Wall -Wextra -Wpedantic -Werror -g -Isrc -MMD -MP
 TARGET := pm
 
 SRC := $(shell find src -name '*.c')
@@ -15,3 +15,5 @@ clean:
 	rm -f $(OBJ) $(TARGET)
 
 .PHONY: clean
+
+-include $(OBJ:.o=.d)
