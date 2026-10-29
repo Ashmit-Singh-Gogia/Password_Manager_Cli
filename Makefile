@@ -1,10 +1,9 @@
-CC      := clang
-CFLAGS  := -std=c11 -Wall -Wextra -Wpedantic -Werror -g -Iinclude
-TARGET  := pm
-SRC     := $(shell find src -name '*.c')
-OBJ     := $(SRC:.c=.o)
-CFLAGS  := -std=c11 -Wall -Wextra -Wpedantic -Werror -g -Iinclude -MMD -MP
+CC     := clang
+CFLAGS := -std=c11 -Wall -Wextra -Wpedantic -Werror -g -Isrc
+TARGET := pm
 
+SRC := $(shell find src -name '*.c')
+OBJ := $(SRC:.c=.o)
 
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ)
@@ -13,8 +12,6 @@ $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(OBJ:.o=.d) $(TARGET)
+	rm -f $(OBJ) $(TARGET)
 
 .PHONY: clean
-
--include $(OBJ:.o=.d)
