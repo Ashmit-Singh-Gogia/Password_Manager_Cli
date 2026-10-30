@@ -1,4 +1,5 @@
 #include "cli.h"
+#include "../auth/auth.h"
 #include "../storage/storage.h"
 #include "../vault/vault.h"
 #include <limits.h>
@@ -176,6 +177,15 @@ int cli_run(int argc, char **argv) {
     print_help();
     return 0;
   }
+
+  // Setup master password on first run, then verify it
+  if (auth_setup() != STATUS_OK) {
+    return 1;
+  }
+  if (auth_check() != STATUS_OK) {
+    return 1;
+  }
+
   const char *cmd = argv[1];
   if (strcmp(cmd, "help") == 0) {
     print_help();
