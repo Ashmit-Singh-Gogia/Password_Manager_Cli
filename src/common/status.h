@@ -8,6 +8,7 @@ typedef enum Status {
   STATUS_NOT_FOUND,
   STATUS_TOO_LONG,
   STATUS_NO_MEMORY,
+  STATUS_IO_ERROR,
 } Status;
 
 #endif
