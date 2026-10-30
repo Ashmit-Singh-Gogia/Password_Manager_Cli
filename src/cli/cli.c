@@ -136,6 +136,40 @@ static int cmd_get(const char *service, int show_password) {
   return 0;
 }
 
+static int cmd_delete(const char *service) {
+  char path[PATH_MAX];
+  if (storage_get_path(path, sizeof(path)) != STATUS_OK) {
+    fprintf(stderr, "Error: could not resolve vault path.\n");
+    return 1;
+  }
+
+  vault v;
+  vault_init(&v);
+
+  if (storage_load(&v, path) != STATUS_OK) {
+    fprintf(stderr, "Error: could not load vault.\n");
+    vault_free(&v);
+    return 1;
+  }
+
+  Status s = vault_delete(&v, service);
+  if (s == STATUS_NOT_FOUND) {
+    fprintf(stderr, "Error: '%s' not found.\n", service);
+    vault_free(&v);
+    return 1;
+  }
+
+  if (storage_save(&v, path) != STATUS_OK) {
+    fprintf(stderr, "Error: could not save vault.\n");
+    vault_free(&v);
+    return 1;
+  }
+
+  printf("Deleted '%s'.\n", service);
+  vault_free(&v);
+  return 0;
+}
+
 int cli_run(int argc, char **argv) {
   // No command given → show help
   if (argc < 2) {
@@ -160,6 +194,13 @@ int cli_run(int argc, char **argv) {
     }
     int show = (argc >= 4 && strcmp(argv[3], "--show") == 0);
     return cmd_get(argv[2], show);
+  }
+  if (strcmp(cmd, "delete") == 0) {
+    if (argc < 3) {
+      fprintf(stderr, "Usage: pm delete <service>\n");
+      return 1;
+    }
+    return cmd_delete(argv[2]);
   }
   // Unknown command
   fprintf(stderr, "Error: unknown command '%s'\n", cmd);
