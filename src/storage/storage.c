@@ -1,8 +1,11 @@
 #include "storage.h"
 #include <errno.h>
+#include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
+// stores vault entries into the disc
 Status storage_save(const vault *v, const char *path) {
   if (!v || !path || path[0] == '\0') {
     return STATUS_INVALID_INPUT;
@@ -26,6 +29,7 @@ Status storage_save(const vault *v, const char *path) {
   return STATUS_OK;
 }
 
+// loads extries from disc to the vault
 Status storage_load(vault *v, const char *path) {
   if (!v || !path || path[0] == '\0') {
     return STATUS_INVALID_INPUT;
@@ -75,5 +79,26 @@ Status storage_load(vault *v, const char *path) {
     }
   }
   fclose(f);
+  return STATUS_OK;
+}
+
+//
+Status storage_get_path(char *buf, size_t size) {
+  if (!buf || size == 0) {
+    return STATUS_INVALID_INPUT;
+  }
+
+  // in macos and linux this gives us the home directory path
+  const char *home = getenv("HOME");
+  if (!home || home[0] == '\0') {
+    return STATUS_IO_ERROR;
+  }
+
+  // building the path from the above home directory
+  int written = snprintf(buf, size, "%s/.pm_vault.txt", home);
+  if (written < 0 || (size_t)written >= size) {
+    return STATUS_TOO_LONG;
+  }
+
   return STATUS_OK;
 }
