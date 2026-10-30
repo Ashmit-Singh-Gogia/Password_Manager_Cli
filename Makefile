@@ -5,15 +5,23 @@ TARGET := pm
 SRC := $(shell find src -name '*.c')
 OBJ := $(SRC:.c=.o)
 
+PREFIX ?= /usr/local
+
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-clean:
-	rm -f $(OBJ) $(TARGET)
+install: $(TARGET)
+	cp $(TARGET) $(PREFIX)/bin/pm
 
-.PHONY: clean
+uninstall:
+	rm -f $(PREFIX)/bin/pm
+
+clean:
+	rm -f $(OBJ) $(OBJ:.o=.d) $(TARGET)
+
+.PHONY: clean install uninstall
 
 -include $(OBJ:.o=.d)
