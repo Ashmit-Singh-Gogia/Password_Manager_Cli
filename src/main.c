@@ -3,20 +3,28 @@
 #include <stdio.h>
 
 int main(void) {
+  const char *file = "test_vault.txt";
+
+  // 1. Add and save
   vault v;
   vault_init(&v);
+  vault_add(&v, "github", "ashmit", "secret123");
+  storage_save(&v, file);
+  vault_free(&v);
 
-  Status s = vault_add(&v, "github", "user", "pass");
+  // 2. Load back
+  vault loaded;
+  vault_init(&loaded);
+  storage_load(&loaded, file);
 
-  if (s == STATUS_INVALID_INPUT) {
-    printf("Success: vault_add correctly rejected tabs with "
-           "STATUS_INVALID_INPUT!\n");
+  // 3. Find by service and print
+  entry *e = vault_find(&loaded, "github");
+  if (e) {
+    printf("Loaded: %s | %s | %s\n", e->service, e->username, e->password);
   } else {
-    printf("Unexpected status: %d\n", s);
+    printf("Not found!\n");
   }
 
-  printf("Entries in vault: %zu\n", v.count); // Should be 0
-  storage_save(&v, "test_vault.txt");
-  vault_free(&v);
+  vault_free(&loaded);
   return 0;
 }
